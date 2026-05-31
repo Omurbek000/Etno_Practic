@@ -5,19 +5,19 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 LANGUAGE_CHOICES = (
-        (" Kyrgyz", "Kyrgyz"),
-        ("Russian", "Russian"),
-        ("Other", "Other"),
+        ("Kyrgyz","Kyrgyz"),
+        ("Russian","Russian"),
+        ("Other","Other"),
     )
 
 ACCESS_TYPE = (("Free", "Free"), ("Subscription", "Subscription"), ("Rent", "Rent"))
 
 AGE_CHOICES = (
-    ('0+', '0+'),
-    ('6+', '6+'),
-    ('12+', '12+'),
-    ('16+', '16+'),
-    ('18+', '18+')
+    ('0+','0+'),
+    ('6+','6+'),
+    ('12+','12+'),
+    ('16+','16+'),
+    ('18+','18+')
 )
 
 class UserProfile(AbstractUser):
@@ -57,10 +57,10 @@ class Person(models.Model):
     last_name = models.CharField(max_length=100)
     person_image = models.ImageField(upload_to="person_image")
     ROLE_CHOICES = (
-        ("Actor", "Actor"),
-        ("Actress", "Actress"),
-        ("Director", "Director"),
-        ("both", "both"),
+        ("Actor","Actor"),
+        ("Actress","Actress"),
+        ("Director","Director"),
+        ("both","both"),
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     
@@ -88,14 +88,16 @@ class Film(models.Model):
     genres = models.ManyToManyField(Genre)
     persons = models.ManyToManyField(Person)
     access_type = models.CharField(max_length=15, choices=ACCESS_TYPE)
-    rent_price = models.DecimalField(max_digits=10, decimal_places=2)
+    rent_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     is_published = models.BooleanField(default=False)
-    views_count = models.PositiveBigIntegerField()
+    views_count = models.PositiveBigIntegerField(default=0)
     created_date = models.DateField(auto_now_add=True)
     
     def __str__(self):
         return self.title
     
+
+
 
     
 class Series(models.Model):
@@ -106,11 +108,12 @@ class Series(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     language = models.CharField(max_length=15, choices=LANGUAGE_CHOICES)
     trailer_url = models.URLField()
+    video_series = models.FileField(upload_to='series_video',blank=True, null=True)
     genres = models.ManyToManyField(Genre)
     persons = models.ManyToManyField(Person)
     access_type = models.CharField(max_length=15, choices=ACCESS_TYPE)
     is_published = models.BooleanField(default=False)
-    views_count = models.PositiveBigIntegerField()
+    views_count = models.PositiveBigIntegerField(default=0)
     created_date = models.DateField(auto_now_add=True)
 
     def __str__(self):
@@ -119,15 +122,14 @@ class Series(models.Model):
 
 
 class Season(models.Model):
-    serise = models.ForeignKey(Series, on_delete=models.CASCADE)
+    series = models.ForeignKey(Series, on_delete=models.CASCADE)
     season_number = models.PositiveIntegerField()    
     title = models.CharField(max_length=100)
     year = models.PositiveIntegerField()
  
- 
+
     def __str__(self):
-        return self.serise
-    
+      return f"{self.series.title} - Season {self.season_number}: {self.title}"
 
 
 class Cartoon(models.Model):
@@ -144,7 +146,7 @@ class Cartoon(models.Model):
     genres = models.ManyToManyField(Genre)
     access_type = models.CharField(max_length=15, choices=ACCESS_TYPE)
     is_published = models.BooleanField(default=False)
-    views_count = models.PositiveBigIntegerField()
+    views_count = models.PositiveBigIntegerField(default=0)
     created_date = models.DateField(auto_now_add=True)
     
     def __str__(self):
@@ -155,9 +157,9 @@ class Cartoon(models.Model):
 class Subscription(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     PLAN_CHOICES = (
-        ('daily', 'daily'),
-        ('monthly', 'monthly'),
-        ('year', 'year')
+        ('daily','daily'),
+        ('monthly','monthly'),
+        ('year','year')
     )
     plan = models.CharField(max_length=15, choices=PLAN_CHOICES)
     start_date = models.DateTimeField(auto_now_add=True)
