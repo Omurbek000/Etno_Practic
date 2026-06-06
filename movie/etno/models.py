@@ -99,16 +99,25 @@ class Film(models.Model):
 
 
 
-    
+class Season(models.Model):
+    season_number = models.PositiveIntegerField()    
+    title = models.CharField(max_length=100)
+    year = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"Season {self.season_number}: {self.title}"
+
+
 class Series(models.Model):
+    season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name='series_list')
     title = models.CharField(max_length=30)
     description = models.TextField(null=True, blank=True)
-    series_image = models.ImageField(upload_to="series_image")
+    image = models.ImageField(upload_to="series_images") 
     year = models.PositiveIntegerField()
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     language = models.CharField(max_length=15, choices=LANGUAGE_CHOICES)
     trailer_url = models.URLField()
-    video_series = models.FileField(upload_to='series_video',blank=True, null=True)
+    video = models.FileField(upload_to='series_videos', blank=True, null=True) 
     genres = models.ManyToManyField(Genre)
     persons = models.ManyToManyField(Person)
     access_type = models.CharField(max_length=15, choices=ACCESS_TYPE)
@@ -118,19 +127,6 @@ class Series(models.Model):
 
     def __str__(self):
         return self.title
-    
-# ⁡⁢⁣⁢серианы сезонго байлаш керек в будушем пока не могу так как не хочу заного делать БД⁡
-
-class Season(models.Model):
-    series = models.ForeignKey(Series, on_delete=models.CASCADE)
-    season_number = models.PositiveIntegerField()    
-    title = models.CharField(max_length=100)
-    year = models.PositiveIntegerField()
- 
-
-    def __str__(self):
-      return f"{self.series.title} - Season {self.season_number}: {self.title}"
-
 
 class Cartoon(models.Model):
     title = models.CharField(max_length=30)

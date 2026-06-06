@@ -28,10 +28,6 @@ class FilmViewSet(viewsets.ModelViewSet):
     serializer_class = FilmSerializer
 
 
-class SeriesViewSet(viewsets.ModelViewSet):
-    queryset = Series.objects.all()
-    serializer_class = SeriesSerializer
-    
     
 class SeasonViewSet(viewsets.ModelViewSet):
     queryset = Season.objects.all()
