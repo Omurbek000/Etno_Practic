@@ -119,7 +119,7 @@ class Series(models.Model):
     def __str__(self):
         return self.title
     
-
+# ⁡⁢⁣⁢серианы сезонго байлаш керек в будушем пока не могу так как не хочу заного делать БД⁡
 
 class Season(models.Model):
     series = models.ForeignKey(Series, on_delete=models.CASCADE)

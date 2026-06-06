@@ -5,13 +5,13 @@ from .models import *
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = '__all__'
+        fields = ['id', 'last_name','first_name','email','avatar','phone_number','date_register','subscription_status','subscription_end']
 
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = '__all__'
+        fields = ['name']
         
         
 class PersonSerializer(serializers.ModelSerializer):
@@ -24,25 +24,32 @@ class PersonSerializer(serializers.ModelSerializer):
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
-        fields = '__all__'
+        fields = ['country']
         
 
 class FilmSerializer(serializers.ModelSerializer):
+    country = CountrySerializer()
+    genres = GenreSerializer(many=True)
+    persons = PersonSerializer(many=True)
     class Meta:
         model = Film
-        fields = '__all__'
+        fields = ['id','title','description','poster_image','year','language','duration','video','trailer',
+                  'genres','persons','access_type','rent_price','is_published','views_count','created_date','country']
         
         
 class SeriesSerializer(serializers.ModelSerializer):
+    country = CountrySerializer()
+    genres = GenreSerializer(many=True)
+    persons = PersonSerializer(many=True)
     class Meta:
         model = Series
-        fields = '__all__'
-        
+        fields = ['title','description','series_image','year','country','language','views_count','created_date',
+                  'country','trailer_url','video_series','genres','persons','access_type','is_published']        
         
 class SeasonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Season
-        fields = '__all__'
+        fields = ['title','season_number','series','year']
         
         
 class CartoonSerializer(serializers.ModelSerializer):
