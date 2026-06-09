@@ -2,12 +2,12 @@ from rest_framework import viewsets, generics
 from .serializers import *
 
 
-class UserProfileListView(generics.ListAPIView):
+class UserProfileListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileListSerializer
 
 
-class UserProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
+class UserProfileDetailAPIView(generics.RetrieveAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileDetailSerializer
 

@@ -19,4 +19,6 @@ router.register(r'review', ReviewViewSet, basename='reviews')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('users/', UserProfileListAPIView.as_view(),name='users_list'),
+    path('users/<int:pk>/', UserProfileDetailAPIView.as_view(),name='users_detail'),
 ]
