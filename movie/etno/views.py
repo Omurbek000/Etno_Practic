@@ -3,9 +3,14 @@ from .serializers import *
 
 
 
-class UserProfileViewSet(viewsets.ModelViewSet):
+class UserProfileLISTtViewSet(generics.ListAPIView):
     queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
+    serializer_class = UserProfileLISTSerializer
+    
+
+class UserProfileDetailViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileDetailSerializer
     
     
 class GenreViewSet(viewsets.ModelViewSet):
