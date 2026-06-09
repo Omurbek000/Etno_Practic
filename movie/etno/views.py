@@ -3,15 +3,13 @@ from .serializers import *
 
 
 
-class UserProfileLISTtViewSet(generics.ListAPIView):
+class UserProfileListView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
-    serializer_class = UserProfileLISTSerializer
-    
+    serializer_class = UserProfileListSerializer
 
-class UserProfileDetailViewSet(viewsets.ModelViewSet):
+class UserProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileDetailSerializer
-    
     
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
