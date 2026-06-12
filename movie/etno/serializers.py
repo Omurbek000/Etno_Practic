@@ -5,96 +5,176 @@ from .models import *
 class UserProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['id','first_name','last_name','avatar']
+        fields = ["id", "first_name", "last_name", "avatar"]
+
 
 class UserProfileDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['id', 'last_name','first_name','email','avatar','phone_number','date_register','subscription_status','subscription_end']
+        fields = [
+            "id",
+            "last_name",
+            "first_name",
+            "email",
+            "avatar",
+            "phone_number",
+        ]
 
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = ['name']
-        
-        
+        fields = ["name"]
+
+class GenreDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ["name"]
+
+
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-        fields = '__all__'
-        
+        fields = "__all__"
 
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
-        fields = ['country']
-        
+        fields = ["country"]
 
-class FilmSerializer(serializers.ModelSerializer):
+
+class FilmListSerializer(serializers.ModelSerializer):
+     country = CountrySerializer()
+     genres = GenreSerializer(many=True)
+     persons = PersonSerializer(many=True)
+     class Meta:
+        model = Film
+        fields = [
+            "id",
+            "title",
+            "poster_image",
+            "year",
+            "genres",
+            "access_type",
+            "is_published",
+            "created_date",
+            "country",
+            "persons",
+        ]
+
+
+class FilmDetailSerializer(serializers.ModelSerializer):
     country = CountrySerializer()
     genres = GenreSerializer(many=True)
     persons = PersonSerializer(many=True)
+
     class Meta:
         model = Film
-        fields = ['id','title','description','poster_image','year','language','duration','video','trailer',
-                  'genres','persons','access_type','rent_price','is_published','views_count','created_date','country']
+        fields = [
+            "id",
+            "title",
+            "description",
+            "poster_image",
+            "year",
+            "language",
+            "duration",
+            "video",
+            "trailer",
+            "genres",
+            "persons",
+            "access_type",
+            "rent_price",
+            "is_published",
+            "views_count",
+            "created_date",
+            "country",
+        ]
 
 
-        
+
+
 class SeriesSerializer(serializers.ModelSerializer):
     country = CountrySerializer()
     genres = GenreSerializer(many=True)
     persons = PersonSerializer(many=True)
-    season_title = serializers.CharField(source='season.title', read_only=True)
+    season_title = serializers.CharField(source="season.title", read_only=True)
 
     class Meta:
         model = Series
         fields = [
-            'id', 'season', 'season_title', 'title', 'description', 'image', 
-            'year', 'country', 'language', 'trailer_url', 'video', 
-            'genres', 'persons', 'access_type', 'is_published', 
-            'views_count', 'created_date'
-        ]        
+            "id",
+            "season",
+            "season_title",
+            "title",
+            "description",
+            "image",
+            "year",
+            "country",
+            "language",
+            "trailer_url",
+            "video",
+            "genres",
+            "persons",
+            "access_type",
+            "is_published",
+            "views_count",
+            "created_date",
+        ]
 
 
 class SeasonSerializer(serializers.ModelSerializer):
     series_list = SeriesSerializer(many=True, read_only=True)
+
     class Meta:
         model = Season
-        fields = ['id', 'season_number', 'title', 'year', 'series_list']
-        
-        
+        fields = ["id", "season_number", "title", "year", "series_list"]
+
+
 class CartoonSerializer(serializers.ModelSerializer):
     country = CountrySerializer()
     genres = GenreSerializer(many=True)
-    
+
     class Meta:
         model = Cartoon
-        fields = ['title','description','cartoon_image','year','language','duration','video','trailer_url','age_rating',
-                  'genres','access_type','is_published','views_count','created_date','country']
-        
-        
+        fields = [
+            "title",
+            "description",
+            "cartoon_image",
+            "year",
+            "language",
+            "duration",
+            "video",
+            "trailer_url",
+            "age_rating",
+            "genres",
+            "access_type",
+            "is_published",
+            "views_count",
+            "created_date",
+            "country",
+        ]
+
+
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
-        fields = '__all__'
-        
-        
+        fields = "__all__"
+
+
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
-        fields = '__all__'
-        
-        
+        fields = "__all__"
+
+
 class FavoriteItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavoriteItem
-        fields = '__all__'
-        
+        fields = "__all__"
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = "__all__"

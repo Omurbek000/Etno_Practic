@@ -5,9 +5,12 @@ from .serializers import *
 class UserProfileListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileListSerializer
+    
+    def get_queryset(self):
+        return UserProfile.objects.filter(id=self.request.user.id)
 
 
-class UserProfileDetailAPIView(generics.RetrieveAPIView):
+class UserProfileDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileDetailSerializer
 
@@ -27,9 +30,13 @@ class CountryViewSet(viewsets.ModelViewSet):
     serializer_class = CountrySerializer
 
 
-class FilmViewSet(viewsets.ModelViewSet):
+class FilmListAPIView(generics.ListAPIView):
     queryset = Film.objects.all()
-    serializer_class = FilmSerializer
+    serializer_class = FilmListSerializer
+
+class FilmDetailAPIView(generics.RetrieveAPIView):
+    queryset = Film.objects.all()
+    serializer_class = FilmDetailSerializer
 
 
 class SeasonViewSet(viewsets.ModelViewSet):
