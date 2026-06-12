@@ -1,6 +1,7 @@
 from rest_framework import viewsets, generics
 from .serializers import *
-
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import FilmFilter, SeriesFilter, CartoonFilter
 
 class UserProfileListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
@@ -15,9 +16,13 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserProfileDetailSerializer
 
 
-class GenreViewSet(viewsets.ModelViewSet):
+class GenreAPIView(generics.ListAPIView):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+
+class GenreDetailAPIView(generics.RetrieveAPIView):
+    queryset = Genre.objects.all()
+    serializer_class = GenreDetailSerializer
 
 
 class PersonViewSet(viewsets.ModelViewSet):
@@ -33,10 +38,19 @@ class CountryViewSet(viewsets.ModelViewSet):
 class FilmListAPIView(generics.ListAPIView):
     queryset = Film.objects.all()
     serializer_class = FilmListSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = FilmFilter
 
 class FilmDetailAPIView(generics.RetrieveAPIView):
     queryset = Film.objects.all()
     serializer_class = FilmDetailSerializer
+    
+    
+class SeriesViewSet(viewsets.ModelViewSet):
+    queryset = Series.objects.all()
+    serializer_class = SeriesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = SeriesFilter
 
 
 class SeasonViewSet(viewsets.ModelViewSet):
@@ -47,6 +61,8 @@ class SeasonViewSet(viewsets.ModelViewSet):
 class CartoonViewSet(viewsets.ModelViewSet):
     queryset = Cartoon.objects.all()
     serializer_class = CartoonSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CartoonFilter
 
 
 class SubscriptionViewSet(viewsets.ModelViewSet):

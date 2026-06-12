@@ -25,11 +25,27 @@ class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ["name"]
+        
+        
+class FilmListSerializer(serializers.ModelSerializer):
+     class Meta:
+        model = Film
+        fields = [
+            "id",
+            "title",
+            "poster_image",
+            "year",
+            "access_type",
+            "is_published",
+            "created_date",
+        ]
+        
 
 class GenreDetailSerializer(serializers.ModelSerializer):
+    film_genre = FilmListSerializer(many=True, read_only=True)
     class Meta:
         model = Genre
-        fields = ["name"]
+        fields = ["name", "film_genre"]
 
 
 class PersonSerializer(serializers.ModelSerializer):
@@ -44,24 +60,6 @@ class CountrySerializer(serializers.ModelSerializer):
         fields = ["country"]
 
 
-class FilmListSerializer(serializers.ModelSerializer):
-     country = CountrySerializer()
-     genres = GenreSerializer(many=True)
-     persons = PersonSerializer(many=True)
-     class Meta:
-        model = Film
-        fields = [
-            "id",
-            "title",
-            "poster_image",
-            "year",
-            "genres",
-            "access_type",
-            "is_published",
-            "created_date",
-            "country",
-            "persons",
-        ]
 
 
 class FilmDetailSerializer(serializers.ModelSerializer):
@@ -134,7 +132,6 @@ class SeasonSerializer(serializers.ModelSerializer):
 class CartoonSerializer(serializers.ModelSerializer):
     country = CountrySerializer()
     genres = GenreSerializer(many=True)
-
     class Meta:
         model = Cartoon
         fields = [

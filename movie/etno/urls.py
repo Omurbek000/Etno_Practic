@@ -5,7 +5,7 @@ from .views import *
 router = routers.DefaultRouter()
 
 
-router.register(r"genre", GenreViewSet, basename="genres")
+
 router.register(r"person", PersonViewSet, basename="persons")
 router.register(r"country", CountryViewSet, basename="countrys")
 router.register(r"season", SeasonViewSet, basename="seasons")
@@ -22,4 +22,6 @@ urlpatterns = [
     path("users/<int:pk>/", UserProfileDetailAPIView.as_view(), name="users_detail"),
     path('film/', FilmListAPIView.as_view(),name='film_list'),
     path('film/<int:pk>', FilmDetailAPIView.as_view(), name='film_detail'),
+    path('genre/', GenreAPIView.as_view(),name='ganre_list'),
+    path('genre/<int:pk>/',GenreDetailAPIView.as_view(),name='ganre_detail'),
 ]

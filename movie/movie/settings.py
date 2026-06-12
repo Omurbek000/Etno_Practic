@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "rest_framework",
     "etno",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -130,3 +131,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'etno.UserProfile'
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
