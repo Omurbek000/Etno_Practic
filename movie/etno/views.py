@@ -2,6 +2,7 @@ from rest_framework import viewsets, generics
 from .serializers import *
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import FilmFilter, SeriesFilter, CartoonFilter
+from .pagination import FilmPagination, SeriesPagination, CartoonPagination, SubscriptionPagination, ReviewPagination
 
 class UserProfileListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
@@ -40,6 +41,7 @@ class FilmListAPIView(generics.ListAPIView):
     serializer_class = FilmListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = FilmFilter
+    pagination_class = FilmPagination
 
 class FilmDetailAPIView(generics.RetrieveAPIView):
     queryset = Film.objects.all()
@@ -51,7 +53,7 @@ class SeriesViewSet(viewsets.ModelViewSet):
     serializer_class = SeriesSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = SeriesFilter
-
+    pagination_class = SeriesPagination
 
 class SeasonViewSet(viewsets.ModelViewSet):
     queryset = Season.objects.all()
@@ -63,11 +65,13 @@ class CartoonViewSet(viewsets.ModelViewSet):
     serializer_class = CartoonSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = CartoonFilter
+    pagination_class = CartoonPagination
 
 
 class SubscriptionViewSet(viewsets.ModelViewSet):
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
+    pagination_class = SubscriptionPagination
 
 
 class FavoriteViewSet(viewsets.ModelViewSet):
@@ -83,3 +87,4 @@ class FavoriteItemViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    pagination_class = ReviewPagination
