@@ -21,13 +21,32 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
         ]
 
 
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ["country"]
+
+
+
+
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ["name"]
         
+
+
+class PersonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+        fields = "__all__"       
+        
         
 class FilmListSerializer(serializers.ModelSerializer):
+     country = CountrySerializer()
+     genres = GenreSerializer(many=True)
+     get_avg_rating = serializers.SerializerMethodField(read_only=True, many=True)
+     get_count_people = serializers.SerializerMethodField(read_only=True, many=True)
      class Meta:
         model = Film
         fields = [
@@ -38,27 +57,24 @@ class FilmListSerializer(serializers.ModelSerializer):
             "access_type",
             "is_published",
             "created_date",
+            "country",
+            "genres",
+            "get_avg_rating",
+            "get_count_people",
         ]
-        
+
+     def avg_rating(self, obj):
+        return obj.get_avg_rating()
+    
+     def get_count_people(self,obj):
+        return obj.get_count_people()
+    
 
 class GenreDetailSerializer(serializers.ModelSerializer):
     film_genre = FilmListSerializer(many=True, read_only=True)
     class Meta:
         model = Genre
         fields = ["name", "film_genre"]
-
-
-class PersonSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Person
-        fields = "__all__"
-
-
-class CountrySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Country
-        fields = ["country"]
-
 
 
 

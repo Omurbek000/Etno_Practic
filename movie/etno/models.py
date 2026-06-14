@@ -98,6 +98,17 @@ class Film(models.Model):
     def __str__(self):
         return self.title
 
+    
+    def get_avf_rating(self):
+        ratings =  self.film_rating.all()
+        if ratings.exists():
+            return sum([i.stars for i in ratings]) / ratings.count()
+        return 0 
+    
+    
+    def get_count_people(self):
+        return self.film_rating.count()
+        
 
 class Season(models.Model):
     season_number = models.PositiveIntegerField()
@@ -178,7 +189,7 @@ class FavoriteItem(models.Model):
 
 class Review(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    film = models.ForeignKey(Film, on_delete=models.CASCADE, null=True, blank=True)
+    film = models.ForeignKey(Film, on_delete=models.CASCADE, null=True, blank=True,related_name='film_rating')
     series = models.ForeignKey(Series, on_delete=models.CASCADE, null=True, blank=True)
     cartoon = models.ForeignKey(
         Cartoon, on_delete=models.CASCADE, null=True, blank=True
