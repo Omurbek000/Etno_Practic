@@ -27,27 +27,25 @@ class CountrySerializer(serializers.ModelSerializer):
         fields = ["country"]
 
 
-
-
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ["name"]
-        
 
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-        fields = "__all__"       
-        
-        
+        fields = "__all__"
+
+
 class FilmListSerializer(serializers.ModelSerializer):
-     country = CountrySerializer()
-     genres = GenreSerializer(many=True)
-     get_avg_rating = serializers.SerializerMethodField(read_only=True, many=True)
-     get_count_people = serializers.SerializerMethodField(read_only=True, many=True)
-     class Meta:
+    country = CountrySerializer()
+    genres = GenreSerializer(many=True)
+    get_avg_rating = serializers.SerializerMethodField(read_only=True)
+    get_count_people = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
         model = Film
         fields = [
             "id",
@@ -63,19 +61,19 @@ class FilmListSerializer(serializers.ModelSerializer):
             "get_count_people",
         ]
 
-     def avg_rating(self, obj):
+    def get_avg_rating(self, obj):
         return obj.get_avg_rating()
-    
-     def get_count_people(self,obj):
+
+    def get_count_people(self, obj):
         return obj.get_count_people()
-    
+
 
 class GenreDetailSerializer(serializers.ModelSerializer):
     film_genre = FilmListSerializer(many=True, read_only=True)
+
     class Meta:
         model = Genre
         fields = ["name", "film_genre"]
-
 
 
 class FilmDetailSerializer(serializers.ModelSerializer):
@@ -104,8 +102,6 @@ class FilmDetailSerializer(serializers.ModelSerializer):
             "created_date",
             "country",
         ]
-
-
 
 
 class SeriesSerializer(serializers.ModelSerializer):
@@ -148,6 +144,7 @@ class SeasonSerializer(serializers.ModelSerializer):
 class CartoonSerializer(serializers.ModelSerializer):
     country = CountrySerializer()
     genres = GenreSerializer(many=True)
+
     class Meta:
         model = Cartoon
         fields = [
