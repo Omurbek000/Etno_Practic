@@ -188,7 +188,7 @@ class FavoriteItem(models.Model):
 
 
 class Review(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE,related_name='user_review')
     film = models.ForeignKey(Film, on_delete=models.CASCADE, null=True, blank=True,related_name='film_rating')
     series = models.ForeignKey(Series, on_delete=models.CASCADE, null=True, blank=True)
     cartoon = models.ForeignKey(

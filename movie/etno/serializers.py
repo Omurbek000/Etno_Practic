@@ -185,6 +185,7 @@ class FavoriteItemSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    user_review = UserProfileListSerializer(read_only=True)
     class Meta:
         model = Review
-        fields = "__all__"
+        fields = ['user_review','text','parent','created_date']
