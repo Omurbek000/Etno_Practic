@@ -36,7 +36,13 @@ class GenreSerializer(serializers.ModelSerializer):
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-        fields = "__all__"
+        fields = ["last_name", "person_image", "role"]
+
+
+class PersonDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+        fields = ["id", "first_name", "last_name", "person_image", "role"]
 
 
 class FilmListSerializer(serializers.ModelSerializer):
@@ -104,11 +110,29 @@ class FilmDetailSerializer(serializers.ModelSerializer):
         ]
 
 
-class SeriesSerializer(serializers.ModelSerializer):
+class SeriesListSerializer(serializers.ModelSerializer):
+    country = CountrySerializer()
+    genres = GenreSerializer(many=True)
+
+    class Meta:
+        model = Series
+        fields = [
+            "id",
+            "title",
+            "image",
+            "year",
+            "country",
+            "language",
+            "genres",
+            "access_type",
+            "is_published",
+        ]
+
+
+class SeriesDetailSerializer(serializers.ModelSerializer):
     country = CountrySerializer()
     genres = GenreSerializer(many=True)
     persons = PersonSerializer(many=True)
-    season_title = serializers.CharField(source="season.title", read_only=True)
 
     class Meta:
         model = Series
@@ -133,15 +157,39 @@ class SeriesSerializer(serializers.ModelSerializer):
         ]
 
 
-class SeasonSerializer(serializers.ModelSerializer):
-    series_list = SeriesSerializer(many=True, read_only=True)
+class SeasonListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Season
+        fields = ["id", "season_number", "title", "year"]
+
+
+class SeasonDetailSerializer(serializers.ModelSerializer):
+    series_list = SeriesDetailSerializer(many=True, read_only=True)
 
     class Meta:
         model = Season
         fields = ["id", "season_number", "title", "year", "series_list"]
 
 
-class CartoonSerializer(serializers.ModelSerializer):
+class CartoonListSerializer(serializers.ModelSerializer):
+    country = CountrySerializer()
+    genres = GenreSerializer(many=True)
+
+    class Meta:
+        model = Cartoon
+        fields = [
+            "title",
+            "year",
+            "language",
+            "age_rating",
+            "genres",
+            "access_type",
+            "is_published",
+            "country",
+        ]
+
+
+class CartoonDetailSerializer(serializers.ModelSerializer):
     country = CountrySerializer()
     genres = GenreSerializer(many=True)
 
@@ -186,6 +234,7 @@ class FavoriteItemSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     user_review = UserProfileListSerializer(read_only=True)
+
     class Meta:
         model = Review
-        fields = ['user_review','text','parent','created_date']
+        fields = ["user_review", "text", "parent", "created_date"]
