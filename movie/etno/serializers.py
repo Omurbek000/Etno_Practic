@@ -33,7 +33,7 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = ["name"]
 
 
-class PersonSerializer(serializers.ModelSerializer):
+class PersonListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = ["last_name", "person_image", "role"]
@@ -85,7 +85,7 @@ class GenreDetailSerializer(serializers.ModelSerializer):
 class FilmDetailSerializer(serializers.ModelSerializer):
     country = CountrySerializer()
     genres = GenreSerializer(many=True)
-    persons = PersonSerializer(many=True)
+    persons = PersonListSerializer(many=True)
 
     class Meta:
         model = Film
@@ -132,7 +132,7 @@ class SeriesListSerializer(serializers.ModelSerializer):
 class SeriesDetailSerializer(serializers.ModelSerializer):
     country = CountrySerializer()
     genres = GenreSerializer(many=True)
-    persons = PersonSerializer(many=True)
+    persons = PersonListSerializer(many=True)
 
     class Meta:
         model = Series

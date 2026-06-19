@@ -2,12 +2,19 @@ from rest_framework import viewsets, generics
 from .serializers import *
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import FilmFilter, SeriesFilter, CartoonFilter
-from .pagination import FilmPagination, SeriesPagination, CartoonPagination, SubscriptionPagination, ReviewPagination
+from .pagination import (
+    FilmPagination,
+    SeriesPagination,
+    CartoonPagination,
+    SubscriptionPagination,
+    ReviewPagination,
+)
+
 
 class UserProfileListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileListSerializer
-    
+
     def get_queryset(self):
         return UserProfile.objects.filter(id=self.request.user.id)
 
@@ -21,14 +28,20 @@ class GenreAPIView(generics.ListAPIView):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
+
 class GenreDetailAPIView(generics.RetrieveAPIView):
     queryset = Genre.objects.all()
     serializer_class = GenreDetailSerializer
 
 
-class PersonViewSet(viewsets.ModelViewSet):
+class PersonListAPIView(generics.ListAPIView):
     queryset = Person.objects.all()
-    serializer_class = PersonSerializer
+    serializer_class = PersonListSerializer
+
+
+class PersonDetailAPIView(generics.RetrieveDestroyAPIView):
+    queryset = Person.objects.all()
+    serializer_class = PersonDetailSerializer
 
 
 class CountryViewSet(viewsets.ModelViewSet):
@@ -43,29 +56,46 @@ class FilmListAPIView(generics.ListAPIView):
     filterset_class = FilmFilter
     pagination_class = FilmPagination
 
+
 class FilmDetailAPIView(generics.RetrieveAPIView):
     queryset = Film.objects.all()
     serializer_class = FilmDetailSerializer
-    
-    
-class SeriesViewSet(viewsets.ModelViewSet):
+
+
+class SeriesListAPIView(generics.ListAPIView):
     queryset = Series.objects.all()
-    serializer_class = SeriesSerializer
+    serializer_class = SeriesListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = SeriesFilter
     pagination_class = SeriesPagination
 
-class SeasonViewSet(viewsets.ModelViewSet):
+
+class SeriesDetailAPIView(generics.RetrieveDestroyAPIView):
+    queryset = Series.objects.all()
+    serializer_class = SeriesDetailSerializer
+
+
+class SeasonListAPIView(generics.ListAPIView):
     queryset = Season.objects.all()
-    serializer_class = SeasonSerializer
+    serializer_class = SeasonListSerializer
 
 
-class CartoonViewSet(viewsets.ModelViewSet):
+class SeasonDetailAPIView(generics.RetrieveDestroyAPIView):
+    queryset = Season.objects.all()
+    serializer_class = SeasonDetailSerializer
+
+
+class CartoonListAPIView(generics.ListAPIView):
     queryset = Cartoon.objects.all()
-    serializer_class = CartoonSerializer
+    serializer_class = CartoonListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = CartoonFilter
     pagination_class = CartoonPagination
+
+
+class CartoonDetailAPIView(generics.RetrieveDestroyAPIView):
+    queryset = Cartoon.objects.all()
+    serializer_class = CartoonDetailSerializer
 
 
 class SubscriptionViewSet(viewsets.ModelViewSet):
