@@ -1,4 +1,4 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, permissions
 from .serializers import *
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import FilmFilter, SeriesFilter, CartoonFilter
@@ -9,7 +9,7 @@ from .pagination import (
     SubscriptionPagination,
     ReviewPagination,
 )
-
+from .permissions import CheckSubscription, CheckUser
 
 class UserProfileListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
@@ -60,6 +60,7 @@ class FilmListAPIView(generics.ListAPIView):
 class FilmDetailAPIView(generics.RetrieveAPIView):
     queryset = Film.objects.all()
     serializer_class = FilmDetailSerializer
+    permission_classes = [permissions.IsAuthenticated, CheckSubscription]
 
 
 class SeriesListAPIView(generics.ListAPIView):
@@ -83,6 +84,7 @@ class SeasonListAPIView(generics.ListAPIView):
 class SeasonDetailAPIView(generics.RetrieveDestroyAPIView):
     queryset = Season.objects.all()
     serializer_class = SeasonDetailSerializer
+    permission_classes = [permissions.IsAuthenticated, CheckSubscription]
 
 
 class CartoonListAPIView(generics.ListAPIView):
@@ -96,6 +98,7 @@ class CartoonListAPIView(generics.ListAPIView):
 class CartoonDetailAPIView(generics.RetrieveDestroyAPIView):
     queryset = Cartoon.objects.all()
     serializer_class = CartoonDetailSerializer
+    permission_classes = [permissions.IsAuthenticated, CheckSubscription]
 
 
 class SubscriptionViewSet(viewsets.ModelViewSet):
@@ -118,3 +121,4 @@ class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     pagination_class = ReviewPagination
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, CheckUser]

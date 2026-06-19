@@ -85,7 +85,7 @@ class Film(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
     video = models.FileField(upload_to="film_video")
     trailer = models.URLField()
-    genres = models.ManyToManyField(Genre, related_name='film_genre')
+    genres = models.ManyToManyField(Genre, related_name="film_genre")
     persons = models.ManyToManyField(Person)
     access_type = models.CharField(max_length=15, choices=ACCESS_TYPE)
     rent_price = models.DecimalField(
@@ -98,17 +98,15 @@ class Film(models.Model):
     def __str__(self):
         return self.title
 
-    
-    def get_avf_rating(self):
-        ratings =  self.film_rating.all()
-        if ratings.exists():
-            return sum([i.stars for i in ratings]) / ratings.count()
-        return 0 
-    
-    
+    def get_avg_rating(self):
+        ratings = self.film_rating.filter(stars__isnull=False)
+        if not ratings.exists():
+            return 0
+        return round(sum(r.stars for r in ratings) / ratings.count(), 1)
+   
     def get_count_people(self):
         return self.film_rating.count()
-        
+
 
 class Season(models.Model):
     season_number = models.PositiveIntegerField()
@@ -188,8 +186,16 @@ class FavoriteItem(models.Model):
 
 
 class Review(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE,related_name='user_review')
-    film = models.ForeignKey(Film, on_delete=models.CASCADE, null=True, blank=True,related_name='film_rating')
+    user = models.ForeignKey(
+        UserProfile, on_delete=models.CASCADE, related_name="user_review"
+    )
+    film = models.ForeignKey(
+        Film,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="film_rating",
+    )
     series = models.ForeignKey(Series, on_delete=models.CASCADE, null=True, blank=True)
     cartoon = models.ForeignKey(
         Cartoon, on_delete=models.CASCADE, null=True, blank=True
@@ -202,3 +208,6 @@ class Review(models.Model):
     text = models.TextField(null=True, blank=True)
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"review {self.user}: {self.parent}"
