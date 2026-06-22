@@ -28,4 +28,7 @@ urlpatterns = [
     path("season/<int:pk>", SeasonDetailAPIView.as_view(), name="season_detail"),
     path("cartoon", CartoonListAPIView.as_view(), name="caroon_list"),
     path("cartoon/<int:pk>", CartoonDetailAPIView.as_view(), name="cartoon_detail"),
+    path('register/',RegisterView.as_view(), name='register_list'),
+    path('login/',CustomLoginView.as_view(), name='login_list'),
+    path('logaut/',LogoutView.as_view(), name='logaut_list'),
 ]
