@@ -101,8 +101,8 @@ class SeasonAdmin(TranslationMediaMixin, TranslationAdmin):
 
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
-    list_display = ("user", "plan", "price", "is_activ", "start_date", "end_date")
-    list_filter = ("plan", "is_activ")
+    list_display = ("user", "plan", "price", "is_active", "start_date", "end_date")
+    list_filter = ("plan", "is_active")
     search_fields = ("user__username", "user__email")
 
 

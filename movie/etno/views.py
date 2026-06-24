@@ -12,6 +12,7 @@ from .pagination import (
 from .permissions import CheckSubscription, CheckUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.models import AnonymousUser
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
@@ -98,7 +99,7 @@ class FilmListAPIView(generics.ListAPIView):
 class FilmDetailAPIView(generics.RetrieveAPIView):
     queryset = Film.objects.all()
     serializer_class = FilmDetailSerializer
-    permission_classes = [permissions.IsAuthenticated, CheckSubscription]
+    permission_classes = [CheckSubscription]
 
 
 class SeriesListAPIView(generics.ListAPIView):
@@ -112,6 +113,7 @@ class SeriesListAPIView(generics.ListAPIView):
 class SeriesDetailAPIView(generics.RetrieveDestroyAPIView):
     queryset = Series.objects.all()
     serializer_class = SeriesDetailSerializer
+    permission_classes = [CheckSubscription]
 
 
 class SeasonListAPIView(generics.ListAPIView):
@@ -122,7 +124,6 @@ class SeasonListAPIView(generics.ListAPIView):
 class SeasonDetailAPIView(generics.RetrieveDestroyAPIView):
     queryset = Season.objects.all()
     serializer_class = SeasonDetailSerializer
-    permission_classes = [permissions.IsAuthenticated, CheckSubscription]
 
 
 class CartoonListAPIView(generics.ListAPIView):
@@ -136,7 +137,7 @@ class CartoonListAPIView(generics.ListAPIView):
 class CartoonDetailAPIView(generics.RetrieveDestroyAPIView):
     queryset = Cartoon.objects.all()
     serializer_class = CartoonDetailSerializer
-    permission_classes = [permissions.IsAuthenticated, CheckSubscription]
+    permission_classes = [CheckSubscription]
 
 
 class SubscriptionViewSet(viewsets.ModelViewSet):
@@ -144,19 +145,56 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
     serializer_class = SubscriptionSerializer
     pagination_class = SubscriptionPagination
 
-
-class FavoriteViewSet(viewsets.ModelViewSet):
-    queryset = Favorite.objects.all()
+class FavoriteAPIView(generics.RetrieveAPIView):
     serializer_class = FavoriteSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        return Favorite.objects.filter(user=self.request.user)
+
+
+    def retrieve(self, request, *args, **kwargs):
+        if isinstance(request.user, AnonymousUser):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        favorite, created = Favorite.objects.get_or_create(user=request.user)
+        serializer = self.get_serializer(favorite)
+        return Response(serializer.data)
 
 
 class FavoriteItemViewSet(viewsets.ModelViewSet):
     queryset = FavoriteItem.objects.all()
     serializer_class = FavoriteItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        if isinstance(self.request.user, AnonymousUser):
+            return FavoriteItem.objects.none()
+
+        return FavoriteItem.objects.filter(watchlist__user=self.request.user)
+
+
+    def perform_create(self, serializer):
+        favorite, created = Favorite.objects.get_or_create(user=self.request.user)
+
+        # Prevent duplicates: check if same content already in favorites
+        film = serializer.validated_data.get('film')
+        series = serializer.validated_data.get('series')
+        cartoon = serializer.validated_data.get('cartoon')
+
+        if film and FavoriteItem.objects.filter(watchlist=favorite, film=film).exists():
+            raise serializers.ValidationError({'detail': 'Этот фильм уже в избранном'})
+        if series and FavoriteItem.objects.filter(watchlist=favorite, series=series).exists():
+            raise serializers.ValidationError({'detail': 'Этот эпизод уже в избранном'})
+        if cartoon and FavoriteItem.objects.filter(watchlist=favorite, cartoon=cartoon).exists():
+            raise serializers.ValidationError({'detail': 'Этот мультфильм уже в избранном'})
+
+        serializer.save(watchlist=favorite)
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     pagination_class = ReviewPagination
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, CheckUser]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

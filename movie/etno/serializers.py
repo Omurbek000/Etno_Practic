@@ -3,6 +3,7 @@ from .models import *
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
+
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
@@ -23,23 +24,22 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+
 class CustomLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        email = data.get('email')
+        username = data.get('username')
         password = data.get('password')
 
         try:
-            user = UserProfile.objects.get(email=email)
+            user = UserProfile.objects.get(username=username)
         except UserProfile.DoesNotExist:
-            raise serializers.ValidationError({"email": "Пользователь с таким email не найден"})
+            raise serializers.ValidationError({"username": "Пользователь с таким именем не найден"})
 
         if not user.check_password(password):
             raise serializers.ValidationError({"password": "Неверный пароль"})
-
-
 
         self.context['user'] = user
         return data
@@ -70,11 +70,10 @@ class LogoutSerializer(serializers.Serializer):
         return attrs
 
 
-
 class UserProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ["id", "first_name", "last_name", "avatar"]
+        fields = ["id", "username", "first_name", "last_name", "email", "avatar", "phone_number", "subscription_status", "date_register"]
 
 
 class UserProfileDetailSerializer(serializers.ModelSerializer):
@@ -82,30 +81,33 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = [
             "id",
-            "last_name",
+            "username",
             "first_name",
+            "last_name",
             "email",
             "avatar",
             "phone_number",
+            "subscription_status",
+            "date_register",
         ]
 
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
-        fields = ["country"]
+        fields = ["id", "country"]
 
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = ["name"]
+        fields = ["id", "name"]
 
 
 class PersonListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-        fields = ["last_name", "person_image", "role"]
+        fields = ["id", "last_name", "person_image", "role"]
 
 
 class PersonDetailSerializer(serializers.ModelSerializer):
@@ -118,7 +120,7 @@ class FilmListSerializer(serializers.ModelSerializer):
     country = CountrySerializer()
     genres = GenreSerializer(many=True)
     get_avg_rating = serializers.SerializerMethodField(read_only=True)
-    get_count_people = serializers.SerializerMethodField(read_only=True)
+    get_ratings_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Film
@@ -133,14 +135,14 @@ class FilmListSerializer(serializers.ModelSerializer):
             "country",
             "genres",
             "get_avg_rating",
-            "get_count_people",
+            "get_ratings_count",
         ]
 
     def get_avg_rating(self, obj):
         return obj.get_avg_rating()
 
-    def get_count_people(self, obj):
-        return obj.get_count_people()
+    def get_ratings_count(self, obj):
+        return obj.get_ratings_count()
 
 
 class GenreDetailSerializer(serializers.ModelSerializer):
@@ -208,7 +210,6 @@ class SeriesDetailSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "season",
-            "season_title",
             "title",
             "description",
             "image",
@@ -247,7 +248,9 @@ class CartoonListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cartoon
         fields = [
+            "id",
             "title",
+            "cartoon_image",
             "year",
             "language",
             "age_rating",
@@ -265,6 +268,7 @@ class CartoonDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cartoon
         fields = [
+            "id",
             "title",
             "description",
             "cartoon_image",
@@ -289,21 +293,87 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class FavoriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Favorite
-        fields = "__all__"
-
-
 class FavoriteItemSerializer(serializers.ModelSerializer):
+    film = FilmListSerializer(read_only=True)
+    film_id = serializers.PrimaryKeyRelatedField(
+        queryset=Film.objects.all(),
+        write_only=True,
+        source='film',
+        required=False,
+        allow_null=True,
+    )
+    series_id = serializers.PrimaryKeyRelatedField(
+        queryset=Series.objects.all(),
+        write_only=True,
+        source='series',
+        required=False,
+        allow_null=True,
+    )
+    cartoon_id = serializers.PrimaryKeyRelatedField(
+        queryset=Cartoon.objects.all(),
+        write_only=True,
+        source='cartoon',
+        required=False,
+        allow_null=True,
+    )
+
     class Meta:
         model = FavoriteItem
-        fields = "__all__"
+        fields = ['id', 'film', 'film_id', 'series_id', 'cartoon_id']
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    film_item = FavoriteItemSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Favorite
+        fields = ['id', 'user', 'film_item']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    user_review = UserProfileListSerializer(read_only=True)
+    user_review = UserProfileListSerializer(read_only=True, source='user')
+    film_id = serializers.PrimaryKeyRelatedField(
+        queryset=Film.objects.all(),
+        write_only=True,
+        required=False,
+        allow_null=True,
+    )
+    series_id = serializers.PrimaryKeyRelatedField(
+        queryset=Series.objects.all(),
+        write_only=True,
+        required=False,
+        allow_null=True,
+    )
+    cartoon_id = serializers.PrimaryKeyRelatedField(
+        queryset=Cartoon.objects.all(),
+        write_only=True,
+        required=False,
+        allow_null=True,
+    )
 
     class Meta:
         model = Review
-        fields = ["user_review", "text", "parent", "created_date"]
+        fields = [
+            "id",
+            "user_review",
+            "film_id",
+            "series_id",
+            "cartoon_id",
+            "stars",
+            "text",
+            "parent",
+            "created_date",
+        ]
+
+    def create(self, validated_data):
+        film = validated_data.pop('film_id', None)
+        series = validated_data.pop('series_id', None)
+        cartoon = validated_data.pop('cartoon_id', None)
+        user = validated_data.pop('user')
+        return Review.objects.create(
+            user=user,
+            film=film,
+            series=series,
+            cartoon=cartoon,
+            **validated_data,
+        )

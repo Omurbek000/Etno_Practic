@@ -103,9 +103,12 @@ class Film(models.Model):
         if not ratings.exists():
             return 0
         return round(sum(r.stars for r in ratings) / ratings.count(), 1)
-   
-    def get_count_people(self):
+
+    def get_ratings_count(self):
         return self.film_rating.count()
+
+    class Meta:
+        ordering = ["-created_date"]
 
 
 class Season(models.Model):
@@ -115,6 +118,9 @@ class Season(models.Model):
 
     def __str__(self):
         return f"Season {self.season_number}: {self.title}"
+
+    class Meta:
+        ordering = ["season_number"]
 
 
 class Series(models.Model):
@@ -139,6 +145,10 @@ class Series(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ["-created_date"]
+        verbose_name_plural = "series"
+
 
 class Cartoon(models.Model):
     title = models.CharField(max_length=30)
@@ -160,6 +170,9 @@ class Cartoon(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ["-created_date"]
+
 
 class Subscription(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -167,8 +180,11 @@ class Subscription(models.Model):
     plan = models.CharField(max_length=15, choices=PLAN_CHOICES)
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()
-    is_activ = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
     price = models.PositiveIntegerField()
+
+    class Meta:
+        ordering = ["-start_date"]
 
 
 class Favorite(models.Model):
@@ -176,13 +192,16 @@ class Favorite(models.Model):
 
 
 class FavoriteItem(models.Model):
-    watchlist = models.ForeignKey(Favorite, on_delete=models.CASCADE)
-    film = models.ForeignKey(Film, on_delete=models.CASCADE, null=True, blank=True)
+    watchlist = models.ForeignKey(Favorite, on_delete=models.CASCADE, related_name='film_item')
+    film = models.ForeignKey(Film, on_delete=models.CASCADE, null=True, blank=True, related_name='item_film')
     series = models.ForeignKey(Series, on_delete=models.CASCADE, null=True, blank=True)
     cartoon = models.ForeignKey(
         Cartoon, on_delete=models.CASCADE, null=True, blank=True
     )
     added_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-added_date"]
 
 
 class Review(models.Model):
@@ -211,3 +230,6 @@ class Review(models.Model):
 
     def __str__(self) -> str:
         return f"review {self.user}: {self.parent}"
+
+    class Meta:
+        ordering = ["-created_date"]
