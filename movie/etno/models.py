@@ -233,3 +233,10 @@ class Review(models.Model):
 
     class Meta:
         ordering = ["-created_date"]
+
+
+class Testke(models.Model):
+    name = models.TextField()
+    age = models.IntegerField()
+    first_name = models.TextField()
+    created_at = models.DateField(auto_created=True)
