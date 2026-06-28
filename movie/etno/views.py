@@ -195,6 +195,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     pagination_class = ReviewPagination
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, CheckUser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['film', 'series', 'cartoon']
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

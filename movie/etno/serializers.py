@@ -295,31 +295,24 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
 class FavoriteItemSerializer(serializers.ModelSerializer):
     film = FilmListSerializer(read_only=True)
+    series = SeriesListSerializer(read_only=True)     
+    cartoon = CartoonListSerializer(read_only=True)   
     film_id = serializers.PrimaryKeyRelatedField(
-        queryset=Film.objects.all(),
-        write_only=True,
-        source='film',
-        required=False,
-        allow_null=True,
+        queryset=Film.objects.all(), write_only=True, source='film',
+        required=False, allow_null=True,
     )
     series_id = serializers.PrimaryKeyRelatedField(
-        queryset=Series.objects.all(),
-        write_only=True,
-        source='series',
-        required=False,
-        allow_null=True,
+        queryset=Series.objects.all(), write_only=True, source='series',
+        required=False, allow_null=True,
     )
     cartoon_id = serializers.PrimaryKeyRelatedField(
-        queryset=Cartoon.objects.all(),
-        write_only=True,
-        source='cartoon',
-        required=False,
-        allow_null=True,
+        queryset=Cartoon.objects.all(), write_only=True, source='cartoon',
+        required=False, allow_null=True,
     )
 
     class Meta:
         model = FavoriteItem
-        fields = ['id', 'film', 'film_id', 'series_id', 'cartoon_id']
+        fields = ['id', 'film', 'series', 'cartoon', 'film_id', 'series_id', 'cartoon_id']
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
