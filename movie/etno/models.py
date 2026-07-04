@@ -233,8 +233,3 @@ class Review(models.Model):
 
     class Meta:
         ordering = ["-created_date"]
-
-
-class TestOwner(models.Model):
-    name = models.CharField()
-    age = models.IntegerField()

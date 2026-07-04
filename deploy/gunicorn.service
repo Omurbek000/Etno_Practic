@@ -1,0 +1,18 @@
+[Unit]
+Description=Etno_Practic Gunicorn
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/Etno_Practic/movie
+ExecStart=/home/ubuntu/Etno_Practic/venv/bin/gunicorn \
+    --workers 3 \
+    --bind 127.0.0.1:8000 \
+    --timeout 300 \
+    movie.wsgi:application
+Restart=always
+Environment="DJANGO_SETTINGS_MODULE=movie.settings"
+
+[Install]
+WantedBy=multi-user.target
