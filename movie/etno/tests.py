@@ -52,7 +52,7 @@ class LoginViewTest(APITestCase):
         )
 
     def test_login_success(self):
-        data = {"email": "login@test.com", "password": "Pass123!"}
+        data = {"username": "loginuser", "password": "Pass123!"}
         response = self.client.post(f"{PREFIX}/login/", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("access", response.data)
@@ -220,7 +220,9 @@ class FilmTest(APITestCase):
         response = self.client.get(f"{PREFIX}/film/{self.film.id}/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_film_detail_requires_auth(self):
+    def test_film_detail_subscription_anonymous_forbidden(self):
+        self.film.access_type = "Subscription"
+        self.film.save()
         response = self.client.get(f"{PREFIX}/film/{self.film.id}/")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -316,7 +318,9 @@ class SeriesTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["title"], "Episode 1")
 
-    def test_series_full_auth_required(self):
+    def test_series_subscription_anonymous_forbidden(self):
+        self.series.access_type = "Subscription"
+        self.series.save()
         response = self.client.get(f"{PREFIX}/series/{self.series.id}/")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -381,7 +385,9 @@ class CartoonTest(APITestCase):
         response = self.client.get(f"{PREFIX}/cartoon/{self.cartoon.id}/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_cartoon_detail_requires_auth(self):
+    def test_cartoon_detail_subscription_anonymous_forbidden(self):
+        self.cartoon.access_type = "Subscription"
+        self.cartoon.save()
         response = self.client.get(f"{PREFIX}/cartoon/{self.cartoon.id}/")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
