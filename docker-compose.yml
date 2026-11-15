@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: etno_db
+    environment:
+      POSTGRES_DB: etno
+      POSTGRES_USER: etno
+      POSTGRES_PASSWORD: etno
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U etno -d etno"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
