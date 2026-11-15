@@ -5,7 +5,12 @@ import { useAuth } from "../context/AuthContext";
 export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ username: "", email: "", password: "", phone_number: "" });
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+    phone_number: "",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +25,9 @@ export default function Register() {
       navigate("/login");
     } catch (err) {
       const data = err?.response?.data;
-      const message = data ? Object.values(data).flat().join(" ") : "Не удалось зарегистрироваться";
+      const message = data
+        ? Object.values(data).flat().join(" ")
+        : "Не удалось зарегистрироваться";
       setError(message);
     } finally {
       setLoading(false);
@@ -36,21 +43,44 @@ export default function Register() {
         <form onSubmit={submit}>
           <div className="field">
             <label>Имя пользователя</label>
-            <input value={form.username} onChange={update("username")} required />
+            <input
+              value={form.username}
+              onChange={update("username")}
+              required
+            />
           </div>
           <div className="field">
             <label>Email</label>
-            <input type="email" value={form.email} onChange={update("email")} required />
+            <input
+              type="email"
+              value={form.email}
+              onChange={update("email")}
+              required
+            />
           </div>
           <div className="field">
             <label>Телефон (формат KG, необязательно)</label>
-            <input placeholder="+996700000000" value={form.phone_number} onChange={update("phone_number")} />
+            <input
+              placeholder="+996700000000"
+              value={form.phone_number}
+              onChange={update("phone_number")}
+            />
           </div>
           <div className="field">
             <label>Пароль</label>
-            <input type="password" value={form.password} onChange={update("password")} required />
+            <input
+              type="password"
+              value={form.password}
+              onChange={update("password")}
+              required
+            />
           </div>
-          <button className="btn btn-primary" type="submit" disabled={loading} style={{ width: "100%" }}>
+          <button
+            className="btn btn-primary"
+            type="submit"
+            disabled={loading}
+            style={{ width: "100%" }}
+          >
             {loading ? "Создаём…" : "Создать аккаунт"}
           </button>
         </form>

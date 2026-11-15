@@ -19,7 +19,12 @@ export default function CartoonDetail() {
       .catch(() => setError(true));
   }, [id]);
 
-  if (error) return <div className="container"><ErrorState message="Мультфильм не найден или доступен только по подписке VIP." /></div>;
+  if (error)
+    return (
+      <div className="container">
+        <ErrorState message="Мультфильм не найден или доступен только по подписке VIP." />
+      </div>
+    );
   if (!item) return <Loader />;
 
   return (
@@ -44,11 +49,22 @@ export default function CartoonDetail() {
               </span>
             ))}
           </div>
-          {item.description && <p className="detail-desc">{item.description}</p>}
+          {item.description && (
+            <p className="detail-desc">{item.description}</p>
+          )}
           <div className="detail-actions">
-            <FavoriteButton idKey="cartoon_id" matchKey="cartoon" itemId={item.id} />
+            <FavoriteButton
+              idKey="cartoon_id"
+              matchKey="cartoon"
+              itemId={item.id}
+            />
             {item.trailer_url && (
-              <a className="btn" href={item.trailer_url} target="_blank" rel="noreferrer">
+              <a
+                className="btn"
+                href={item.trailer_url}
+                target="_blank"
+                rel="noreferrer"
+              >
                 Трейлер ↗
               </a>
             )}
@@ -58,7 +74,11 @@ export default function CartoonDetail() {
 
       {item.video && (
         <div className="video-wrap">
-          <video controls src={mediaUrl(item.video)} poster={mediaUrl(item.cartoon_image)} />
+          <video
+            controls
+            src={mediaUrl(item.video)}
+            poster={mediaUrl(item.cartoon_image)}
+          />
         </div>
       )}
 

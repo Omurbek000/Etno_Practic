@@ -18,17 +18,37 @@ export default function Navbar() {
           ТАСМА
         </NavLink>
         <nav className="nav-links">
-          <NavLink to="/films" className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}>
+          <NavLink
+            to="/films"
+            className={({ isActive }) =>
+              "nav-link" + (isActive ? " active" : "")
+            }
+          >
             Фильмы
           </NavLink>
-          <NavLink to="/series" className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}>
+          <NavLink
+            to="/series"
+            className={({ isActive }) =>
+              "nav-link" + (isActive ? " active" : "")
+            }
+          >
             Сериалы
           </NavLink>
-          <NavLink to="/cartoons" className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}>
+          <NavLink
+            to="/cartoons"
+            className={({ isActive }) =>
+              "nav-link" + (isActive ? " active" : "")
+            }
+          >
             Мультфильмы
           </NavLink>
           {user && (
-            <NavLink to="/favorites" className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}>
+            <NavLink
+              to="/favorites"
+              className={({ isActive }) =>
+                "nav-link" + (isActive ? " active" : "")
+              }
+            >
               Избранное
             </NavLink>
           )}
@@ -38,7 +58,9 @@ export default function Navbar() {
             <>
               <NavLink to="/profile" className="user-pill">
                 {user.username}
-                {user.subscription_status === "VIP" && <span className="tag accent">VIP</span>}
+                {user.subscription_status === "VIP" && (
+                  <span className="tag accent">VIP</span>
+                )}
               </NavLink>
               <button className="btn btn-sm" onClick={handleLogout}>
                 Выйти

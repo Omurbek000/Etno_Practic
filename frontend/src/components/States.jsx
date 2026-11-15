@@ -16,7 +16,9 @@ export function EmptyState({ title = "Кадров не найдено", hint })
   );
 }
 
-export function ErrorState({ message = "Не удалось получить данные с бэкенда" }) {
+export function ErrorState({
+  message = "Не удалось получить данные с бэкенда",
+}) {
   return (
     <div className="state-box">
       <p className="frame-no">Обрыв пленки</p>

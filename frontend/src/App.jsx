@@ -49,7 +49,9 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      <footer>ТАСМА — учебный фронтенд для Etno_Practic · Django REST + React</footer>
+      <footer>
+        ТАСМА — учебный фронтенд для Etno_Practic · Django REST + React
+      </footer>
     </div>
   );
 }

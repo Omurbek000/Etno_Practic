@@ -35,7 +35,11 @@ export default function ReviewSection({ idKey, itemId }) {
     }
     setSubmitting(true);
     try {
-      await createReview({ [idKey]: itemId, stars: stars || null, text: text || null });
+      await createReview({
+        [idKey]: itemId,
+        stars: stars || null,
+        text: text || null,
+      });
       setText("");
       setStars(0);
       load();
@@ -64,19 +68,33 @@ export default function ReviewSection({ idKey, itemId }) {
       </div>
 
       {loading && <p className="frame-no">загрузка…</p>}
-      {!loading && reviews.length === 0 && <p style={{ color: "var(--text-faint)" }}>Пока нет отзывов — будьте первым.</p>}
+      {!loading && reviews.length === 0 && (
+        <p style={{ color: "var(--text-faint)" }}>
+          Пока нет отзывов — будьте первым.
+        </p>
+      )}
 
       {reviews.map((r) => (
         <div className="review-card" key={r.id}>
           <div className="review-head">
-            <span className="review-user">{r.user_review?.username || "Пользователь"}</span>
-            {r.stars ? <span className="review-stars">★ {r.stars}/10</span> : null}
+            <span className="review-user">
+              {r.user_review?.username || "Пользователь"}
+            </span>
+            {r.stars ? (
+              <span className="review-stars">★ {r.stars}/10</span>
+            ) : null}
           </div>
           {r.text && <p className="review-text">{r.text}</p>}
-          <div className="review-head" style={{ marginTop: 8, marginBottom: 0 }}>
+          <div
+            className="review-head"
+            style={{ marginTop: 8, marginBottom: 0 }}
+          >
             <span className="review-date">{r.created_date?.slice(0, 10)}</span>
             {user && r.user_review?.id === user.id && (
-              <button className="btn btn-sm btn-danger" onClick={() => remove(r.id)}>
+              <button
+                className="btn btn-sm btn-danger"
+                onClick={() => remove(r.id)}
+              >
                 Удалить
               </button>
             )}
@@ -88,7 +106,14 @@ export default function ReviewSection({ idKey, itemId }) {
         <form className="review-form" onSubmit={submit}>
           {error && <div className="form-error">{error}</div>}
           <div>
-            <label style={{ fontSize: 12, color: "var(--text-dim)", marginBottom: 6, display: "block" }}>
+            <label
+              style={{
+                fontSize: 12,
+                color: "var(--text-dim)",
+                marginBottom: 6,
+                display: "block",
+              }}
+            >
               Оценка (1–10)
             </label>
             <div className="star-picker">
@@ -109,7 +134,11 @@ export default function ReviewSection({ idKey, itemId }) {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
-          <button className="btn btn-primary" disabled={submitting} type="submit">
+          <button
+            className="btn btn-primary"
+            disabled={submitting}
+            type="submit"
+          >
             {submitting ? "Отправка…" : "Оставить отзыв"}
           </button>
         </form>

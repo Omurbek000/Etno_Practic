@@ -9,15 +9,27 @@ export default function Pagination({ page, count, pageSize = 20, onChange }) {
 
   return (
     <div className="pagination">
-      <button className="page-btn" disabled={page <= 1} onClick={() => onChange(page - 1)}>
+      <button
+        className="page-btn"
+        disabled={page <= 1}
+        onClick={() => onChange(page - 1)}
+      >
         ‹
       </button>
       {pages.map((p) => (
-        <button key={p} className={"page-btn" + (p === page ? " active" : "")} onClick={() => onChange(p)}>
+        <button
+          key={p}
+          className={"page-btn" + (p === page ? " active" : "")}
+          onClick={() => onChange(p)}
+        >
           {p}
         </button>
       ))}
-      <button className="page-btn" disabled={page >= totalPages} onClick={() => onChange(page + 1)}>
+      <button
+        className="page-btn"
+        disabled={page >= totalPages}
+        onClick={() => onChange(page + 1)}
+      >
         ›
       </button>
     </div>

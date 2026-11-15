@@ -10,8 +10,12 @@ export default function FilterBar({ filters, setFilters, showAgeRating }) {
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
-    fetchGenres().then(setGenres).catch(() => setGenres([]));
-    fetchCountries().then(setCountries).catch(() => setCountries([]));
+    fetchGenres()
+      .then(setGenres)
+      .catch(() => setGenres([]));
+    fetchCountries()
+      .then(setCountries)
+      .catch(() => setCountries([]));
   }, []);
 
   const update = (key, value) => {
@@ -22,7 +26,10 @@ export default function FilterBar({ filters, setFilters, showAgeRating }) {
     <div className="filter-bar">
       <div className="filter-field">
         <label>Жанр</label>
-        <select value={filters.genres || ""} onChange={(e) => update("genres", e.target.value)}>
+        <select
+          value={filters.genres || ""}
+          onChange={(e) => update("genres", e.target.value)}
+        >
           <option value="">Любой</option>
           {genres.map((g) => (
             <option key={g.id} value={g.id}>
@@ -34,7 +41,10 @@ export default function FilterBar({ filters, setFilters, showAgeRating }) {
 
       <div className="filter-field">
         <label>Страна</label>
-        <select value={filters.country || ""} onChange={(e) => update("country", e.target.value)}>
+        <select
+          value={filters.country || ""}
+          onChange={(e) => update("country", e.target.value)}
+        >
           <option value="">Любая</option>
           {countries.map((c) => (
             <option key={c.id} value={c.id}>
@@ -46,7 +56,10 @@ export default function FilterBar({ filters, setFilters, showAgeRating }) {
 
       <div className="filter-field">
         <label>Доступ</label>
-        <select value={filters.access_type || ""} onChange={(e) => update("access_type", e.target.value)}>
+        <select
+          value={filters.access_type || ""}
+          onChange={(e) => update("access_type", e.target.value)}
+        >
           <option value="">Любой</option>
           {ACCESS_TYPES.map((a) => (
             <option key={a} value={a}>
@@ -58,7 +71,10 @@ export default function FilterBar({ filters, setFilters, showAgeRating }) {
 
       <div className="filter-field">
         <label>Язык</label>
-        <select value={filters.language || ""} onChange={(e) => update("language", e.target.value)}>
+        <select
+          value={filters.language || ""}
+          onChange={(e) => update("language", e.target.value)}
+        >
           <option value="">Любой</option>
           {LANGUAGES.map((l) => (
             <option key={l} value={l}>
@@ -71,7 +87,10 @@ export default function FilterBar({ filters, setFilters, showAgeRating }) {
       {showAgeRating && (
         <div className="filter-field">
           <label>Возраст</label>
-          <select value={filters.age_rating || ""} onChange={(e) => update("age_rating", e.target.value)}>
+          <select
+            value={filters.age_rating || ""}
+            onChange={(e) => update("age_rating", e.target.value)}
+          >
             <option value="">Любой</option>
             {AGE_RATINGS.map((a) => (
               <option key={a} value={a}>

@@ -18,7 +18,11 @@ export default function Profile() {
 
       <div className="profile-card">
         {user.avatar ? (
-          <img className="profile-avatar" src={mediaUrl(user.avatar)} alt={user.username} />
+          <img
+            className="profile-avatar"
+            src={mediaUrl(user.avatar)}
+            alt={user.username}
+          />
         ) : (
           <div className="profile-avatar" />
         )}
@@ -26,7 +30,8 @@ export default function Profile() {
           <p className="profile-name">{user.username}</p>
           <p className="profile-meta">{user.email}</p>
           <p className="profile-meta">
-            Подписка: {user.subscription_status} · с {user.date_register?.slice(0, 10)}
+            Подписка: {user.subscription_status} · с{" "}
+            {user.date_register?.slice(0, 10)}
           </p>
         </div>
       </div>

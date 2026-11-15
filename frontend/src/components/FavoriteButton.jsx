@@ -14,7 +14,9 @@ export default function FavoriteButton({ idKey, matchKey, itemId }) {
     if (!user) return;
     fetchFavorites()
       .then((data) => {
-        const found = (data.film_item || []).find((fi) => fi[matchKey] && fi[matchKey].id === itemId);
+        const found = (data.film_item || []).find(
+          (fi) => fi[matchKey] && fi[matchKey].id === itemId
+        );
         setFavoriteItemId(found ? found.id : null);
       })
       .catch(() => setFavoriteItemId(null));
@@ -42,7 +44,11 @@ export default function FavoriteButton({ idKey, matchKey, itemId }) {
   };
 
   return (
-    <button className={"btn" + (favoriteItemId ? " btn-primary" : "")} onClick={toggle} disabled={busy}>
+    <button
+      className={"btn" + (favoriteItemId ? " btn-primary" : "")}
+      onClick={toggle}
+      disabled={busy}
+    >
       {favoriteItemId ? "★ В избранном" : "☆ В избранное"}
     </button>
   );

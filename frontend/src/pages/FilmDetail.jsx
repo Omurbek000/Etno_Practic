@@ -19,7 +19,12 @@ export default function FilmDetail() {
       .catch(() => setError(true));
   }, [id]);
 
-  if (error) return <div className="container"><ErrorState message="Фильм не найден или доступен только по подписке VIP." /></div>;
+  if (error)
+    return (
+      <div className="container">
+        <ErrorState message="Фильм не найден или доступен только по подписке VIP." />
+      </div>
+    );
   if (!film) return <Loader />;
 
   return (
@@ -36,7 +41,9 @@ export default function FilmDetail() {
             <span>{film.language}</span>
             <span>{film.country?.country}</span>
             <span className="tag accent">{film.access_type}</span>
-            {film.access_type === "Rent" && film.rent_price && <span className="tag">{film.rent_price} сом</span>}
+            {film.access_type === "Rent" && film.rent_price && (
+              <span className="tag">{film.rent_price} сом</span>
+            )}
           </div>
           <div className="detail-meta-row" style={{ marginTop: -8 }}>
             {film.genres?.map((g) => (
@@ -49,7 +56,12 @@ export default function FilmDetail() {
           <div className="detail-actions">
             <FavoriteButton idKey="film_id" matchKey="film" itemId={film.id} />
             {film.trailer && (
-              <a className="btn" href={film.trailer} target="_blank" rel="noreferrer">
+              <a
+                className="btn"
+                href={film.trailer}
+                target="_blank"
+                rel="noreferrer"
+              >
                 Трейлер ↗
               </a>
             )}
@@ -59,7 +71,11 @@ export default function FilmDetail() {
 
       {film.video && (
         <div className="video-wrap">
-          <video controls src={mediaUrl(film.video)} poster={mediaUrl(film.poster_image)} />
+          <video
+            controls
+            src={mediaUrl(film.video)}
+            poster={mediaUrl(film.poster_image)}
+          />
         </div>
       )}
 
@@ -71,7 +87,11 @@ export default function FilmDetail() {
           <div className="cast-row">
             {film.persons.map((p) => (
               <div className="cast-item" key={p.id}>
-                <img className="cast-photo" src={mediaUrl(p.person_image)} alt={p.last_name} />
+                <img
+                  className="cast-photo"
+                  src={mediaUrl(p.person_image)}
+                  alt={p.last_name}
+                />
                 <p className="cast-name">{p.last_name}</p>
               </div>
             ))}

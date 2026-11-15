@@ -19,7 +19,9 @@ export default function Login() {
       navigate(location.state?.from || "/");
     } catch (err) {
       const data = err?.response?.data;
-      const message = data ? Object.values(data).flat().join(" ") : "Не удалось войти";
+      const message = data
+        ? Object.values(data).flat().join(" ")
+        : "Не удалось войти";
       setError(message);
     } finally {
       setLoading(false);
@@ -50,7 +52,12 @@ export default function Login() {
               required
             />
           </div>
-          <button className="btn btn-primary" type="submit" disabled={loading} style={{ width: "100%" }}>
+          <button
+            className="btn btn-primary"
+            type="submit"
+            disabled={loading}
+            style={{ width: "100%" }}
+          >
             {loading ? "Входим…" : "Войти"}
           </button>
         </form>

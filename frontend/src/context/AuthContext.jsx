@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import { loginUser, logoutUser, registerUser, fetchMe } from "../api/endpoints";
 import { setTokens, clearTokens } from "../api/client";
 
@@ -54,7 +60,9 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshUser: loadMe }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, register, logout, refreshUser: loadMe }}
+    >
       {children}
     </AuthContext.Provider>
   );

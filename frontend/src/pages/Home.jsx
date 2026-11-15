@@ -48,8 +48,9 @@ export default function Home() {
           Кино, сериалы <br /> и мульт<em>фильмы</em> в одной плёнке
         </h1>
         <p className="hero-sub">
-          ТАСМА — фронтенд для Etno_Practic: каталог фильмов, сериалов и мультфильмов с
-          фильтрами, рейтингами, отзывами и личным избранным. Подключается к твоему Django REST API.
+          ТАСМА — фронтенд для Etno_Practic: каталог фильмов, сериалов и
+          мультфильмов с фильтрами, рейтингами, отзывами и личным избранным.
+          Подключается к твоему Django REST API.
         </p>
         <div className="hero-actions">
           <Link to="/films" className="btn btn-primary">
@@ -61,7 +62,9 @@ export default function Home() {
         </div>
       </section>
 
-      {error && <ErrorState message="Бэкенд не отвечает. Проверь, что сервер Django запущен и доступен по адресу из .env" />}
+      {error && (
+        <ErrorState message="Бэкенд не отвечает. Проверь, что сервер Django запущен и доступен по адресу из .env" />
+      )}
 
       {!error && films === null && <Loader label="Перематываем плёнку" />}
 
@@ -69,7 +72,13 @@ export default function Home() {
         <Row frameNo="01" title="Фильмы" to="/films">
           <div className="grid">
             {films.map((f) => (
-              <PosterCard key={f.id} item={f} type="films" image={f.poster_image} title={f.title} />
+              <PosterCard
+                key={f.id}
+                item={f}
+                type="films"
+                image={f.poster_image}
+                title={f.title}
+              />
             ))}
           </div>
         </Row>
@@ -79,7 +88,13 @@ export default function Home() {
         <Row frameNo="02" title="Сериалы" to="/series">
           <div className="grid">
             {series.map((s) => (
-              <PosterCard key={s.id} item={s} type="series" image={s.image} title={s.title} />
+              <PosterCard
+                key={s.id}
+                item={s}
+                type="series"
+                image={s.image}
+                title={s.title}
+              />
             ))}
           </div>
         </Row>
@@ -89,7 +104,13 @@ export default function Home() {
         <Row frameNo="03" title="Мультфильмы" to="/cartoons">
           <div className="grid">
             {cartoons.map((c) => (
-              <PosterCard key={c.id} item={c} type="cartoons" image={c.cartoon_image} title={c.title} />
+              <PosterCard
+                key={c.id}
+                item={c}
+                type="cartoons"
+                image={c.cartoon_image}
+                title={c.title}
+              />
             ))}
           </div>
         </Row>

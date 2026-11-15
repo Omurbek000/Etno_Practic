@@ -19,7 +19,12 @@ export default function SeriesDetail() {
       .catch(() => setError(true));
   }, [id]);
 
-  if (error) return <div className="container"><ErrorState message="Серия не найдена или доступна только по подписке VIP." /></div>;
+  if (error)
+    return (
+      <div className="container">
+        <ErrorState message="Серия не найдена или доступна только по подписке VIP." />
+      </div>
+    );
   if (!item) return <Loader />;
 
   return (
@@ -44,11 +49,22 @@ export default function SeriesDetail() {
               </span>
             ))}
           </div>
-          {item.description && <p className="detail-desc">{item.description}</p>}
+          {item.description && (
+            <p className="detail-desc">{item.description}</p>
+          )}
           <div className="detail-actions">
-            <FavoriteButton idKey="series_id" matchKey="series" itemId={item.id} />
+            <FavoriteButton
+              idKey="series_id"
+              matchKey="series"
+              itemId={item.id}
+            />
             {item.trailer_url && (
-              <a className="btn" href={item.trailer_url} target="_blank" rel="noreferrer">
+              <a
+                className="btn"
+                href={item.trailer_url}
+                target="_blank"
+                rel="noreferrer"
+              >
                 Трейлер ↗
               </a>
             )}
@@ -58,7 +74,11 @@ export default function SeriesDetail() {
 
       {item.video && (
         <div className="video-wrap">
-          <video controls src={mediaUrl(item.video)} poster={mediaUrl(item.image)} />
+          <video
+            controls
+            src={mediaUrl(item.video)}
+            poster={mediaUrl(item.image)}
+          />
         </div>
       )}
 
@@ -70,7 +90,11 @@ export default function SeriesDetail() {
           <div className="cast-row">
             {item.persons.map((p) => (
               <div className="cast-item" key={p.id}>
-                <img className="cast-photo" src={mediaUrl(p.person_image)} alt={p.last_name} />
+                <img
+                  className="cast-photo"
+                  src={mediaUrl(p.person_image)}
+                  alt={p.last_name}
+                />
                 <p className="cast-name">{p.last_name}</p>
               </div>
             ))}

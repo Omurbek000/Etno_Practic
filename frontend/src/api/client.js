@@ -41,12 +41,19 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
       const { refresh } = getTokens();
       if (refresh) {
         try {
-          const { data } = await axios.post(`${BASE_URL}/${LANG}/token/refresh/`, { refresh });
+          const { data } = await axios.post(
+            `${BASE_URL}/${LANG}/token/refresh/`,
+            { refresh }
+          );
           setTokens({ access: data.access });
           originalRequest.headers.Authorization = `Bearer ${data.access}`;
           return api(originalRequest);

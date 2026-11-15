@@ -9,7 +9,8 @@ const ACCESS_LABEL = {
 
 export default function PosterCard({ item, type, image, title }) {
   const to = `/${type}/${item.id}`;
-  const accessClass = item.access_type === "Free" ? "" : item.access_type.toLowerCase();
+  const accessClass =
+    item.access_type === "Free" ? "" : item.access_type.toLowerCase();
 
   return (
     <Link to={to} className="poster-card">
@@ -24,7 +25,9 @@ export default function PosterCard({ item, type, image, title }) {
         )}
         <div className="poster-sprockets right" />
         {item.access_type && (
-          <span className={`poster-badge ${accessClass}`}>{ACCESS_LABEL[item.access_type] || item.access_type}</span>
+          <span className={`poster-badge ${accessClass}`}>
+            {ACCESS_LABEL[item.access_type] || item.access_type}
+          </span>
         )}
       </div>
       <div className="poster-body">

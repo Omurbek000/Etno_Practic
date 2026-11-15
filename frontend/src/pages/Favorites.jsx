@@ -15,7 +15,10 @@ export default function Favorites() {
 
   const remove = async (id) => {
     await removeFavorite(id);
-    setData((prev) => ({ ...prev, film_item: prev.film_item.filter((fi) => fi.id !== id) }));
+    setData((prev) => ({
+      ...prev,
+      film_item: prev.film_item.filter((fi) => fi.id !== id),
+    }));
   };
 
   return (
@@ -29,7 +32,10 @@ export default function Favorites() {
       {error && <ErrorState />}
       {!error && !data && <Loader />}
       {data && data.film_item?.length === 0 && (
-        <EmptyState title="Пока пусто" hint="Добавляйте фильмы, сериалы и мультфильмы кнопкой «В избранное» на странице контента." />
+        <EmptyState
+          title="Пока пусто"
+          hint="Добавляйте фильмы, сериалы и мультфильмы кнопкой «В избранное» на странице контента."
+        />
       )}
 
       {data && data.film_item?.length > 0 && (
@@ -40,11 +46,17 @@ export default function Favorites() {
             const cartoon = fi.cartoon;
             const item = film || series || cartoon;
             const type = film ? "films" : series ? "series" : "cartoons";
-            const image = film?.poster_image || series?.image || cartoon?.cartoon_image;
+            const image =
+              film?.poster_image || series?.image || cartoon?.cartoon_image;
             if (!item) return null;
             return (
               <div key={fi.id} style={{ position: "relative" }}>
-                <PosterCard item={item} type={type} image={image} title={item.title} />
+                <PosterCard
+                  item={item}
+                  type={type}
+                  image={image}
+                  title={item.title}
+                />
                 <button
                   className="btn btn-sm btn-danger"
                   style={{ width: "100%", marginTop: 8 }}
