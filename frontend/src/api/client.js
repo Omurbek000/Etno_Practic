@@ -1,3 +1,4 @@
+// @ts-check
 import axios from "axios";
 
 // Бэкенд оборачивает все роуты в i18n_patterns (movie/urls.py),
@@ -11,6 +12,15 @@ const api = axios.create({
   baseURL: `${BASE_URL}/${LANG}`,
 });
 
+/**
+ * @typedef {Object} Tokens
+ * @property {string|null} [access]
+ * @property {string|null} [refresh]
+ */
+
+/**
+ * @returns {Tokens}
+ */
 function getTokens() {
   return {
     access: localStorage.getItem("access"),
@@ -18,6 +28,10 @@ function getTokens() {
   };
 }
 
+/**
+ * @param {Tokens} tokens
+ * @returns {void}
+ */
 export function setTokens({ access, refresh }) {
   if (access) localStorage.setItem("access", access);
   if (refresh) localStorage.setItem("refresh", refresh);
@@ -40,7 +54,9 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
+    const originalRequest =
+      /** @type {import("axios").InternalAxiosRequestConfig & { _retry?: boolean }} */
+      (error.config);
     if (
       error.response &&
       error.response.status === 401 &&
@@ -68,7 +84,10 @@ api.interceptors.response.use(
   }
 );
 
-/** Превращает относительный путь от DRF (если он не абсолютный) в полный URL медиа-файла. */
+/** Превращает относительный путь от DRF (если он не абсолютный) в полный URL медиа-файла.
+ * @param {string|null|undefined} path
+ * @returns {string|null}
+ */
 export function mediaUrl(path) {
   if (!path) return null;
   if (path.startsWith("http://") || path.startsWith("https://")) return path;

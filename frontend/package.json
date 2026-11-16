@@ -13,7 +13,8 @@
     "format:check": "prettier --check \"src/**/*.{js,jsx,css,json}\"",
     "prepare": "husky",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "typecheck": "tsc"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,css,json}": [
@@ -42,6 +43,7 @@
     "lint-staged": "^17.6.1",
     "msw": "^2.15.0",
     "prettier": "^3.10.1",
+    "typescript": "^7.0.2",
     "vite": "^5.4.10",
     "vitest": "^2.1.9"
   }
